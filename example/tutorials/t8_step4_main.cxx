@@ -25,7 +25,7 @@
  * the step4 example.
  */
 
-#include <example/tutorials/t8_step4.h>
+#include <t8_step4.h>
 
 int
 main (int argc, char **argv)
