@@ -27,9 +27,9 @@ t8_vec_orth(const double vec_u[3], const double vec_v[3], const double vec_x[3],
 {
   double lambda;
   
-  if (t8_vec_dot(vec_u, vec_v) != 1)
+  if (t8_vec_dot(vec_u, vec_v) != 0)
   {
-    //ERR
+    sc_abort();
   }
   
   lambda = t8_vec_dot(vec_x, vec_u) / t8_vec_dot(vec_u, vec_u);
@@ -141,7 +141,7 @@ main (int argc, char **argv)
   t8_forest_t         forest;
 
   const char         *prefix_adapt = "t8_example_doughnut";
-  const int           level = 5;
+  const int           level = 6;
 
   mpiret = sc_MPI_Init (&argc, &argv);
   SC_CHECK_MPI (mpiret);
