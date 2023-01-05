@@ -50,6 +50,14 @@ typedef enum
   T8_GHOST_VERTICES   /**< Consider all vertex (codimension 3) and edge and face neighbors. */
 } t8_ghost_type_t;
 
+/** This enumeration contains all possible adapt states. */
+typedef enum
+{
+  T8_ADAPT_COARSE = -1,  /**< Coarse family of elements. */
+  T8_ADAPT_NONE,         /**< Keep the element untouched. */
+  T8_ADAPT_REFINE        /**< Refine the element. */
+} t8_adapt_type_t;
+
 /** This typedef is needed as a helper construct to 
  * properly be able to define a function that returns
  * a pointer to a void fun(void) function. \see t8_forest_get_user_function.
