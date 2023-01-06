@@ -32,7 +32,7 @@
 #include <sc_options.h>
 #include <t8_cmesh/t8_cmesh_examples.h>
 
-static int
+static t8_adapt_type_t
 t8_basic_adapt_refine_type (t8_forest_t forest, t8_forest_t forest_from,
                             t8_locidx_t which_tree, t8_locidx_t lelement_id,
                             t8_eclass_scheme_c *ts, const int is_family,
@@ -46,18 +46,18 @@ t8_basic_adapt_refine_type (t8_forest_t forest, t8_forest_t forest_from,
 
   level = ts->t8_element_level (elements[0]);
   if (level >= *(int *) t8_forest_get_user_data (forest)) {
-    return 0;
+    return T8_ADAPT_NONE;
   }
   /* get the type of the current element */
   type = ((t8_dprism_t *) elements[0])->tri.type;
   /* refine type 0 */
   if (type == 0) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
-static int
+static t8_adapt_type_t
 t8_basic_adapt_refine_tet (t8_forest_t forest, t8_forest_t forest_from,
                            t8_locidx_t which_tree, t8_locidx_t lelement_id,
                            t8_eclass_scheme_c *ts, const int is_family,
@@ -71,15 +71,15 @@ t8_basic_adapt_refine_tet (t8_forest_t forest, t8_forest_t forest_from,
 
   level = ts->t8_element_level (elements[0]);
   if (level >= *(int *) t8_forest_get_user_data (forest)) {
-    return 0;
+    return T8_ADAPT_NONE;
   }
   /* get the type of the current element */
   type = ((t8_dtet_t *) elements[0])->type;
   /* refine type 0 */
   if (type == 0 || type == 2 || type == 4) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 
 }
 

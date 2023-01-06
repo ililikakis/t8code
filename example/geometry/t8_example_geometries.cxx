@@ -425,7 +425,7 @@ public:
 
 /* This adapt callback function will refine all elements at the
  * domain boundary up to a given maximum refinement level. */
-static int
+static t8_adapt_type_t
 t8_geom_adapt_boundary (t8_forest_t forest, t8_forest_t forest_from,
                         t8_locidx_t ltree_id, t8_locidx_t lelement_id,
                         t8_eclass_scheme_c *ts, const int is_family,
@@ -441,7 +441,7 @@ t8_geom_adapt_boundary (t8_forest_t forest, t8_forest_t forest_from,
 
   /* We do not refine more then the given maximum level. */
   if (ts->t8_element_level (elements[0]) >= maxlevel) {
-    return 0;
+    return T8_ADAPT_NONE;
   }
 
   /* Check for each face of the element whether it lies on the 
@@ -456,12 +456,12 @@ t8_geom_adapt_boundary (t8_forest_t forest, t8_forest_t forest_from,
         t8_forest_ltreeid_to_cmesh_ltreeid (forest_from, ltree_id);
       if (t8_cmesh_tree_face_is_boundary (cmesh, lctreeid, tree_face)) {
         /* The tree's face is at the domain boundary, we refine the element. */
-        return 1;
+        return T8_ADAPT_REFINE;
       }
     }
   }
   /* All other elements remain unchanged. */
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 static void

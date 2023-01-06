@@ -36,7 +36,7 @@
  * element is in face the owner that is stored in the ghost layer.
   */
 
-static int
+static t8_adapt_type_t
 t8_test_gao_adapt (t8_forest_t forest, t8_forest_t forest_from,
                    t8_locidx_t which_tree, t8_locidx_t lelement_id,
                    t8_eclass_scheme_c *ts, const int is_family,
@@ -51,9 +51,9 @@ t8_test_gao_adapt (t8_forest_t forest, t8_forest_t forest_from,
   maxlevel = *(int *) t8_forest_get_user_data (forest);
 
   if (eid % 2 && level < maxlevel) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 static void

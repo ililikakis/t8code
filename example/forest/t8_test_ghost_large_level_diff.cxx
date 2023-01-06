@@ -64,7 +64,7 @@
  *  Warning: this refinement schemes only works with the default element
  *           scheme (see t8_scheme_new_default_cxx in t8_default/t8_default_cxx.hxx).
  */
-static int
+static t8_adapt_type_t
 t8_ghost_fractal_adapt (t8_forest_t forest, t8_forest_t forest_from,
                         t8_locidx_t which_tree, t8_locidx_t lelement_id,
                         t8_eclass_scheme_c *ts, const int is_family,
@@ -78,7 +78,7 @@ t8_ghost_fractal_adapt (t8_forest_t forest, t8_forest_t forest_from,
 
   level = ts->t8_element_level (elements[0]);
   if (level >= *(int *) t8_forest_get_user_data (forest)) {
-    return 0;
+    return T8_ADAPT_NONE;
   }
   if (ts->eclass == T8_ECLASS_PRISM) {
     type = ((t8_dprism_t *) elements[0])->tri.type;
@@ -87,31 +87,31 @@ t8_ghost_fractal_adapt (t8_forest_t forest, t8_forest_t forest_from,
       child_id = ts->t8_element_child_id (elements[0]);
       /* Not refining */
       if (child_id == 3 || child_id == 4) {
-        return 0;
+        return T8_ADAPT_NONE;
       }
       /* Refining */
       else {
-        return 1;
+        return T8_ADAPT_REFINE;
       }
     }
-    return 0;
+    return T8_ADAPT_NONE;
   }
   else if (ts->eclass == T8_ECLASS_TET) {
     type = ((t8_dtet_t *) elements[0])->type;
     /* Refine tets of type 0, 3 or 5 */
     if (type == 0 || type == 3 || type == 5) {
-      return 1;
+      return T8_ADAPT_REFINE;
     }
-    return 0;
+    return T8_ADAPT_NONE;
   }
   else if (ts->eclass == T8_ECLASS_HEX) {
     child_id = ts->t8_element_child_id (elements[0]);
     if (child_id == 0 || child_id == 3 || child_id == 5 || child_id == 6) {
-      return 1;
+      return T8_ADAPT_REFINE;
     };
-    return 0;
+    return T8_ADAPT_NONE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 /**

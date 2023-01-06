@@ -59,7 +59,7 @@ t8_test_fiterate_callback (t8_forest_t forest,
 }
 
 /* Only refine the first tree on a process. */
-static int
+static t8_adapt_type_t
 t8_basic_adapt (t8_forest_t forest, t8_forest_t forest_from,
                 t8_locidx_t which_tree, t8_locidx_t lelement_id,
                 t8_eclass_scheme_c *ts, const int is_family,
@@ -72,9 +72,9 @@ t8_basic_adapt (t8_forest_t forest, t8_forest_t forest_from,
   SC_CHECK_MPI (mpiret);
   if (which_tree == 0 && mpirank == 0
       && ts->t8_element_level (elements[0]) < 2) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 static void

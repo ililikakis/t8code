@@ -91,7 +91,7 @@ int                 t8_common_within_levelset (t8_forest_t forest,
  * tree is refined and no other elements. This results in a highly
  * imbalanced forest.
  */
-int                 t8_common_adapt_balance (t8_forest_t forest,
+t8_adapt_type_t     t8_common_adapt_balance (t8_forest_t forest,
                                              t8_forest_t forest_from,
                                              t8_locidx_t which_tree,
                                              t8_locidx_t lelement_id,
@@ -107,7 +107,7 @@ int                 t8_common_adapt_balance (t8_forest_t forest,
  */
 /* TODO: Currently the band_width control is not working yet.
  *        if band_with = 0, then all elements that are touched by the zero LS are refined. */
-int                 t8_common_adapt_level_set (t8_forest_t forest,
+t8_adapt_type_t     t8_common_adapt_level_set (t8_forest_t forest,
                                                t8_forest_t forest_from,
                                                t8_locidx_t which_tree,
                                                t8_locidx_t lelement_id,

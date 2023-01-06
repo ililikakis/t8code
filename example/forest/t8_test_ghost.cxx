@@ -42,7 +42,7 @@ typedef enum
 /* Refine every 0-th, 3rd, 5-th and 6-th child.
  * This function comes from the timings2.c example of p4est.
  */
-int
+t8_adapt_type_t
 t8_refine_p8est (t8_forest_t forest, t8_forest_t forest_from,
                  t8_locidx_t which_tree, t8_locidx_t lelement_id,
                  t8_eclass_scheme_c *ts, const int is_family,
@@ -53,12 +53,12 @@ t8_refine_p8est (t8_forest_t forest, t8_forest_t forest_from,
              ts->t8_element_num_children (elements[0]));
 
   id = ts->t8_element_child_id (elements[0]);
-  return (id == 0 || id == 3 || id == 5 || id == 6);
+  return (t8_adapt_type_t) (id == 0 || id == 3 || id == 5 || id == 6);
 }
 
 /* Refine every third element. */
 /* TODO: rename */
-static int
+static t8_adapt_type_t
 t8_basic_adapt (t8_forest_t forest, t8_forest_t forest_from,
                 t8_locidx_t which_tree, t8_locidx_t lelement_id,
                 t8_eclass_scheme_c *ts, const int is_family,
@@ -69,9 +69,9 @@ t8_basic_adapt (t8_forest_t forest, t8_forest_t forest_from,
              ts->t8_element_num_children (elements[0]));
   level = ts->t8_element_level (elements[0]);
   if (ts->t8_element_get_linear_id (elements[0], level) % 3 == 0) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 /* Prepare a forest for level set controlled refinement around a sphere */

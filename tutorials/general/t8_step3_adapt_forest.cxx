@@ -75,14 +75,14 @@ struct t8_step3_adapt_data
 
 /* The adaptation callback function. This function will be called once for each element
  * and the return value decides whether this element should be refined or not.
- *   return > 0 -> This element should get refined.
- *   return = 0 -> This element should not get refined.
+ *   return T8_ADAPT_REFINE -> This element should get refined.
+ *   return T8_ADAPT_NONE   -> This element should not get refined.
  * If the current element is the first element of a family (= all level l elements that arise from refining
  * the same level l-1 element) then this function is called with the whole family of elements
  * as input and the return value additionally decides whether the whole family should get coarsened.
- *   return > 0 -> The first element should get refined.
- *   return = 0 -> The first element should not get refined.
- *   return < 0 -> The whole family should get coarsened.
+ *   return T8_ADAPT_REFINE -> The first element should get refined.
+ *   return T8_ADAPT_NONE   -> The first element should not get refined.
+ *   return T8_ADAPT_COARSE -> The whole family should get coarsened.
  *  
  * \param [in] forest       The current forest that is in construction.
  * \param [in] forest_from  The forest from which we adapt the current forest (in our case, the uniform forest)
@@ -93,7 +93,7 @@ struct t8_step3_adapt_data
  * \param [in] num_elements The number of entries in \a elements elements that are defined.
  * \param [in] elements     The element or family of elements to consider for refinement/coarsening.
  */
-int
+t8_adapt_type_t
 t8_step3_adapt_callback (t8_forest_t forest,
                          t8_forest_t forest_from,
                          t8_locidx_t which_tree,
@@ -126,15 +126,15 @@ t8_step3_adapt_callback (t8_forest_t forest,
   dist = t8_vec_dist (centroid, adapt_data->midpoint);
   if (dist < adapt_data->refine_if_inside_radius) {
     /* Refine this element. */
-    return 1;
+    return T8_ADAPT_REFINE;
   }
   else if (is_family && dist > adapt_data->coarsen_if_outside_radius) {
     /* Coarsen this family. Note that we check for is_family before, since returning < 0
      * if we do not have a family as input is illegal. */
-    return -1;
+    return T8_ADAPT_COARSE;
   }
   /* Do not change this element. */
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 /* Adapt a forest according to our t8_step3_adapt_callback function.

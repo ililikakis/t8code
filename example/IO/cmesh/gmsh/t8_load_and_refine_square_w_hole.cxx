@@ -113,7 +113,7 @@ t8_midpoint (t8_forest_t forest, t8_locidx_t which_tree,
   }
 }
 
-static int
+static t8_adapt_type_t
 t8_load_refine_adapt (t8_forest_t forest, t8_forest_t forest_from,
                       t8_locidx_t which_tree, t8_locidx_t lelement_id,
                       t8_eclass_scheme_c *ts, const int is_family,
@@ -128,23 +128,23 @@ t8_load_refine_adapt (t8_forest_t forest, t8_forest_t forest_from,
   level = ts->t8_element_level (elements[0]);
   if (level > 2) {
     /* Do not refine further than level 2 */
-    return 0;
+    return T8_ADAPT_NONE;
   }
   /* Refine along the outside boundary.
    * The factors in front of h control the width of the refinement region */
   if (ts->eclass == T8_ECLASS_QUAD && (fabs (elem_midpoint[0]) > 2 - 0.7 * h
                                        || fabs (elem_midpoint[1]) >
                                        2 - 0.8 * h)) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
   /* Refine along the inner boundary.
    * The factor in front of h controls the width of the refinement region. */
   if (ts->eclass == T8_ECLASS_TRIANGLE &&
       t8_vec3_dot (elem_midpoint, elem_midpoint) < 1 + 5 * h) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
 
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 void

@@ -55,7 +55,7 @@ protected:
 };
 
 /* *INDENT-ON* */
-static int
+static t8_adapt_type_t
 t8_test_init_linear_id_refine_everything (t8_forest_t forest,
                                           t8_forest_t forest_from,
                                           t8_locidx_t which_tree,
@@ -65,7 +65,7 @@ t8_test_init_linear_id_refine_everything (t8_forest_t forest,
                                           const int num_elements,
                                           t8_element_t *elements[])
 {
-  return 1;
+  return T8_ADAPT_REFINE;
 }
 
 /* *INDENT-OFF* */

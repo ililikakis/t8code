@@ -68,7 +68,7 @@ struct t8_example_netcdf_adapt_data
 * \note If an element is inside a given radius from the midpoint of the hypercube, this element is refined. If a family of elements is outiside a given radius from the midpoint of the hypercube, it is coarsened. 
 * \note A detailed description of the adaption process is found in step 3 of the tutorial located in 't8code/example/tutorials'.
 */
-int
+t8_adapt_type_t
 t8_example_netcdf_adapt_fn (t8_forest_t forest,
                             t8_forest_t forest_from,
                             t8_locidx_t which_tree,
@@ -95,17 +95,17 @@ t8_example_netcdf_adapt_fn (t8_forest_t forest,
   /* Decide whether the element (or its family) has to be refined or coarsened */
   if (distance < adapt_data->refine_if_inside_radius) {
     /* positive return value means, that this element is going to be refined */
-    return 1;
+    return T8_ADAPT_REFINE;
   }
   else if (is_family && distance > adapt_data->coarsen_if_outside_radius) {
     /* The elements family is going to be coarsened (this is only possible if all elements of this family are process-local) */
     /* returning a negative value means coarsening */
-    return -1;
+    return T8_ADAPT_COARSE;
   }
   else {
     /* In this case the element remains the same and is neither refined nor coarsened */
     /* This is implied by a return value of zero */
-    return 0;
+    return T8_ADAPT_NONE;
   }
 }
 

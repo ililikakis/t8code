@@ -249,7 +249,7 @@ t8_advect_gradient_phi (t8_advect_problem_t * problem,
 
 /* Adapt the forest. We refine if the level-set function is close to zero
  * and coarsen if it is larger than a given threshhold. */
-static int
+static t8_adapt_type_t
 t8_advect_adapt (t8_forest_t forest, t8_forest_t forest_from,
                  t8_locidx_t ltree_id, t8_locidx_t lelement_id,
                  t8_eclass_scheme_c *ts, const int is_family,
@@ -271,7 +271,7 @@ t8_advect_adapt (t8_forest_t forest, t8_forest_t forest_from,
   level = ts->t8_element_level (elements[0]);
   if (level == problem->maxlevel && !is_family) {
     /* It is not possible to refine this level */
-    return 0;
+    return T8_ADAPT_NONE;
   }
   /* Compute the volume threshold. Elements larger than this and
    * close to the 0 level-set are refined */
@@ -295,13 +295,23 @@ t8_advect_adapt (t8_forest_t forest, t8_forest_t forest_from,
   elem_diam = t8_forest_element_diam (forest_from, ltree_id, elements[0]);
   if (fabs (phi) > 2 * band_width * elem_diam) {
     /* coarsen if this is a family and level is not too small */
-    return -(is_family && level > problem->level);
+    if (is_family && level > problem->level) {
+      return T8_ADAPT_COARSE;
+    }
+    else {
+      return T8_ADAPT_NONE;
+    }
   }
   else if (fabs (phi) < band_width * elem_diam && elem_data->vol > vol_thresh) {
     /* refine if level is not too large */
-    return level < problem->maxlevel;
+    if (level < problem->maxlevel) {
+      return T8_ADAPT_REFINE;
+    }
+    else {
+      return T8_ADAPT_NONE;
+    }
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 /* Compute the total volume of the elements with negative phi value */

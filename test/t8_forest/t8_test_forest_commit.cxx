@@ -41,7 +41,7 @@
 /* Adapt a forest such that always the first child of a
  * tree is refined and no other elements. This results in a highly
  * imbalanced forest. */
-static int
+static t8_adapt_type_t
 t8_test_adapt_balance (t8_forest_t forest, t8_forest_t forest_from,
                        t8_locidx_t which_tree, t8_locidx_t lelement_id,
                        t8_eclass_scheme_c *ts, const int is_family,
@@ -58,13 +58,13 @@ t8_test_adapt_balance (t8_forest_t forest, t8_forest_t forest_from,
   maxlevel = *(int *) t8_forest_get_user_data (forest);
   if (level >= maxlevel) {
     /* Do not refine after the maxlevel */
-    return 0;
+    return T8_ADAPT_NONE;
   }
   child_id = ts->t8_element_child_id (elements[0]);
   if (child_id == 1) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 /* adapt, balance and partition a given forest in one step */

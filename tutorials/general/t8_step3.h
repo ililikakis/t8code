@@ -69,7 +69,7 @@ t8_forest_t         t8_step3_adapt_forest (t8_forest_t forest);
  * via t8_forest_set_user_data before calling this function.
  * See t8_step3.cxx for more details.
  */
-int                 t8_step3_adapt_callback (t8_forest_t forest,
+t8_adapt_type_t     t8_step3_adapt_callback (t8_forest_t forest,
                                              t8_forest_t forest_from,
                                              t8_locidx_t which_tree,
                                              t8_locidx_t lelement_id,

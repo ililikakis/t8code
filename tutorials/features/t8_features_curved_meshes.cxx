@@ -1,4 +1,4 @@
-/*
+/*version
   This file is part of t8code.
   t8code is a C library to manage a collection (a forest) of multiple
   connected adaptive space-trees of general element types in parallel.
@@ -78,7 +78,7 @@ struct t8_naca_surface_adapt_data
  * \param [in] num_elements The number of entries in \a elements elements that are defined.
  * \param [in] elements     The element or family of elements to consider for refinement/coarsening.
  */
-int
+t8_adapt_type_t
 t8_naca_surface_adapt_callback (t8_forest_t forest,
                                 t8_forest_t forest_from,
                                 t8_locidx_t which_tree,
@@ -117,13 +117,13 @@ t8_naca_surface_adapt_callback (t8_forest_t forest,
             ts->t8_element_level (elements[0]) < adapt_data->levels[isurface])
         {
           /* Refine this element */
-          return 1;
+          return T8_ADAPT_REFINE;
         }
       }
     }
   }
   /* Do not change this element. */
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 /** 
@@ -209,7 +209,7 @@ struct t8_naca_plane_adapt_data
  * \param [in] num_elements The number of entries in \a elements elements that are defined.
  * \param [in] elements     The element or family of elements to consider for refinement/coarsening.
  */
-int
+t8_adapt_type_t
 t8_naca_plane_adapt_callback (t8_forest_t forest,
                               t8_forest_t forest_from,
                               t8_locidx_t which_tree,
@@ -244,15 +244,15 @@ t8_naca_plane_adapt_callback (t8_forest_t forest,
    * it should be refined. */
   if (distance <= adapt_data->dist
       && elem_level < adapt_data->level + adapt_data->rlevel) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
   /* If the distance is bigger and the elements level therefore to high, it should
    * be coarsened. Note, that only an entire family can be coarsened. */
   if (is_family && distance > adapt_data->dist
       && elem_level > adapt_data->level && num_elements > 1) {
-    return -1;
+    return T8_ADAPT_COARSE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 /** 

@@ -96,7 +96,7 @@ t8_anchor_element (t8_forest_t forest, t8_locidx_t which_tree,
 
 /* refine the forest in a band, given by a plane E and two constants
  * c_min, c_max. We refine the cells in the band c_min*E, c_max*E */
-static int
+static t8_adapt_type_t
 t8_band_adapt (t8_forest_t forest, t8_forest_t forest_from,
                t8_locidx_t which_tree, t8_locidx_t lelement_id,
                t8_eclass_scheme_c *ts, const int is_family,
@@ -136,22 +136,22 @@ t8_band_adapt (t8_forest_t forest, t8_forest_t forest_from,
       if (level < max_level) {
         /* We do refine if level smaller 1+base level and the anchor is
          * to the left of c_max*E */
-        return 1;
+        return T8_ADAPT_REFINE;
       }
     }
     else if (is_family && level > base_level) {
       /* Otherwise, we coarse if we have a family and level is greater
        * than the base level. */
-      return -1;
+      return T8_ADAPT_COARSE;
     }
   }
   else if (is_family && level > base_level) {
     /* If element lies out of the refinement region and a family was given
      * as argument, we coarsen to level base level */
     /* set elem_midpoint to the original midpoint - c_max*normal */
-    return -1;
+    return T8_ADAPT_COARSE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 static void

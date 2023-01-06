@@ -51,7 +51,7 @@ typedef enum
 } t8_ghost_type_t;
 
 /** This enumeration contains all possible adapt states. */
-typedef enum
+typedef enum t8_adapt_type
 {
   T8_ADAPT_COARSE = -1,  /**< Coarse family of elements. */
   T8_ADAPT_NONE,         /**< Keep the element untouched. */
@@ -121,20 +121,20 @@ typedef void        (*t8_forest_replace_t) (t8_forest_t forest_old,
  * \param [in] num_elements the number of entries in \a elements that are defined
  * \param [in] elements     Pointers to a family or, if \a is_family is zero,
  *                          pointer to one element.
- * \return greater zero if the first entry in \a elements should be refined,
- *         smaller zero if the family \a elements shall be coarsened,
- *         zero else.
+ * \return T8_ADAPT_REFINE if the first entry in \a elements should be refined,
+ *         T8_ADAPT_COARSE if the family \a elements shall be coarsened,
+ *         T8_ADAPT_NONE else. \see enum t8_adapt_type.
  */
 /* TODO: Do we really need the forest argument? Since the forest is not committed yet it
  *       seems dangerous to expose to the user. */
-typedef int         (*t8_forest_adapt_t) (t8_forest_t forest,
-                                          t8_forest_t forest_from,
-                                          t8_locidx_t which_tree,
-                                          t8_locidx_t lelement_id,
-                                          t8_eclass_scheme_c *ts,
-                                          const int is_family,
-                                          const int num_elements,
-                                          t8_element_t *elements[]);
+typedef t8_adapt_type_t (*t8_forest_adapt_t) (t8_forest_t forest,
+                                              t8_forest_t forest_from,
+                                              t8_locidx_t which_tree,
+                                              t8_locidx_t lelement_id,
+                                              t8_eclass_scheme_c *ts,
+                                              const int is_family,
+                                              const int num_elements,
+                                              t8_element_t *elements[]);
 
   /** Create a new forest with reference count one.
  * This forest needs to be specialized with the t8_forest_set_* calls.

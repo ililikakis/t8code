@@ -36,7 +36,7 @@ T8_EXTERN_C_BEGIN ();
  * imbalanced forest.
  * The user data of forest must an integer set to the maximum refinement level.
  */
-int
+t8_adapt_type_t
 t8_common_adapt_balance (t8_forest_t forest, t8_forest_t forest_from,
                          t8_locidx_t which_tree, t8_locidx_t lelement_id,
                          t8_eclass_scheme_c *ts, const int is_family,
@@ -52,15 +52,15 @@ t8_common_adapt_balance (t8_forest_t forest, t8_forest_t forest_from,
   maxlevel = *(int *) t8_forest_get_user_data (forest);
   if (level >= maxlevel) {
     /* Do not refine after the maxlevel */
-    return 0;
+    return T8_ADAPT_NONE;
   }
   child_id = ts->t8_element_child_id (elements[0]);
   /* refine the last child of even trees */
   if ((which_tree + t8_forest_get_first_local_tree_id (forest_from)) % 2 == 0
       && child_id == ts->t8_element_num_children (elements[0]) - 1) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 int
@@ -123,7 +123,7 @@ t8_common_within_levelset (t8_forest_t forest, t8_locidx_t ltreeid,
  * \a max_level elements around the zero level-set Gamma = { x | L(x) = 0}
  */
 /* TODO: Currently the band_width control is not working yet. */
-int
+t8_adapt_type_t
 t8_common_adapt_level_set (t8_forest_t forest,
                            t8_forest_t forest_from,
                            t8_locidx_t which_tree,
@@ -147,11 +147,11 @@ t8_common_adapt_level_set (t8_forest_t forest,
 
   /* If maxlevel is exceeded then coarsen */
   if (level > data->max_level && is_family) {
-    return -1;
+    return T8_ADAPT_COARSE;
   }
   /* Refine at least until min level */
   if (level < data->min_level) {
-    return 1;
+    return T8_ADAPT_REFINE;
   }
   within_band =
     t8_common_within_levelset (forest_from, which_tree, elements[0],
@@ -159,14 +159,14 @@ t8_common_adapt_level_set (t8_forest_t forest,
                                data->band_width / 2, data->t, data->udata);
   if (within_band && level < data->max_level) {
     /* The element can be refined and lies inside the refinement region */
-    return 1;
+    return T8_ADAPT_REFINE;
   }
   else if (is_family && level > data->min_level && !within_band) {
     /* If element lies out of the refinement region and a family was given
      * as argument, we coarsen to level base level */
-    return -1;
+    return T8_ADAPT_COARSE;
   }
-  return 0;
+  return T8_ADAPT_NONE;
 }
 
 #if 0
